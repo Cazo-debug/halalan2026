@@ -514,9 +514,8 @@ font-size: clamp(2rem, 7vw, 5.2rem);
 .college-avatar img{
   width: 100%;
   height: 100%;
-  object-fit: contain;   /* prevents logo cropping */
-  object-position: center;
-  padding: 8px;          /* makes logos look balanced */
+  object-fit: cover;   /* best for icons/logos */
+  padding: 0;         /* makes the icon breathe */
   display: block;
 }
 
