@@ -224,7 +224,7 @@ a     { color: inherit; text-decoration: none; }
 /* Ticker */
 .hero-ticker {
   position: relative; z-index: 2;
-  background: var(--gold); color: var(--ink);
+  background: var(--blue); color: var(--paper);
   font-family: var(--ff-display);
   font-size: 1rem; letter-spacing: 0.15em;
   padding: 10px 0; white-space: nowrap; overflow: hidden;
