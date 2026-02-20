@@ -297,7 +297,7 @@ font-size: clamp(2rem, 7vw, 5.2rem);
 .section-tag--gold { color: var(--gold); border-color: var(--gold); }
 
 .section-header h2 {
-  font-family: var(--ff-serif);
+  font-family: var(--ff-display);
   font-size: clamp(2rem, 5vw, 3.4rem);
   font-weight: 900; line-height: 1.1; color: var(--ink);
 }
@@ -427,7 +427,7 @@ font-size: clamp(2rem, 7vw, 5.2rem);
 }
 .step-icon  { font-size: 2.4rem; margin-bottom: 14px; }
 .step-card h3 {
-  font-family: var(--ff-serif);
+  font-family: var(--ff-display);
   font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; line-height: 1.3;
 }
 .step-card p { font-size: 0.88rem; color: var(--muted); }
