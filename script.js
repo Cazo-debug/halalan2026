@@ -49,6 +49,104 @@ const committeeData = {
   ],
 };
 
+const requirementsData = [
+  {
+    letter: 'A', icon: '📝',
+    title: 'Certificate of Candidacy',
+    desc: 'Accomplished form with 2×2 ID photo attached.'
+  },
+  {
+    letter: 'B', icon: '🎓',
+    title: 'Certificate of Good Moral',
+    desc: 'Issued by the university or your college.'
+  },
+  {
+    letter: 'C', icon: '📊',
+    title: 'Grade Slip',
+    desc: 'Official grades from the previous semester.'
+  },
+  {
+    letter: 'D', icon: '📄',
+    title: 'Certificate of Registration',
+    desc: 'Valid COR for the current semester.'
+  },
+  {
+    letter: 'E', icon: '✍️',
+    title: 'Endorsement Letters',
+    desc: 'From your Dean and Department Head. If no Dept. Head, Dean signature suffices.'
+  },
+  {
+    letter: 'F', icon: '📁',
+    title: 'Curriculum Vitae',
+    desc: 'Most recent copy of your CV.'
+  },
+  {
+    letter: 'G', icon: '📌',
+    title: 'General Plan of Action',
+    desc: 'Comprehensive plan required for all candidates — independent or party member.'
+  },
+  {
+    letter: 'H', icon: '👥',
+    title: 'Party Submission Rule',
+    desc: 'Parties must submit as a group. Incomplete party = automatically independent.'
+  },
+];
+
+
+/* ══════════════════════════════════════════════════
+   REQUIREMENTS — render cards
+══════════════════════════════════════════════════ */
+(function initRequirements() {
+  const grid = document.getElementById('req-grid');
+  if (!grid) return;
+
+  requirementsData.forEach((r, i) => {
+    const card = document.createElement('div');
+    card.className = 'req-card fade-in';
+    card.setAttribute('role', 'listitem');
+    card.setAttribute('tabindex', '0');
+    card.style.transitionDelay = `${i * 0.07}s`;
+    card.innerHTML = `
+      <div class="req-icon" aria-hidden="true">${r.icon}</div>
+      <div class="req-body">
+        <div class="req-title">
+          <span class="req-letter" aria-hidden="true">${r.letter}</span>
+          &nbsp;${r.title}
+        </div>
+        <div class="req-desc">${r.desc}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+})();
+
+
+
+(function initNavbar() {
+  const btn  = document.querySelector('.hamburger');
+  const menu = document.getElementById('nav-menu');
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+
+  menu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  document.addEventListener('click', e => {
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+
 
 /* ═══════════════════════════════════════════════════
    NAVBAR — hamburger + scroll tint
