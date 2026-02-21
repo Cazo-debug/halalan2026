@@ -8,13 +8,12 @@
 /* ── DATA ── */
 
 const timelineData = [
-  { date: 'Feb 15',  label: 'Filing Period Announcement' },
   { date: 'Mar 1',   label: 'Filing of Candidacy Opens' },
   { date: 'Mar 11',  label: 'Filing of Candidacy Closes' },
-  { date: 'Mar 13',  label: 'Posting of Official Candidates' },
-  { date: 'Mar 18',  label: 'Campaign Period Begins' },
-  { date: 'April 8',  label: 'Campaign Period Ends' },
-  { date: 'April 9',  label: 'Special online election for 4th-yr' },
+  { date: 'Mar 15',  label: 'Posting of Official Candidates' },
+  { date: 'Mar 16',  label: 'Campaign Period Begins' },
+  { date: 'April 8',  label: 'Meeting de Avance and End of Campaign Period' },
+  { date: 'April 9',  label: 'Special Online Election for OJT Students' },
   { date: 'April 10',  label: 'Election Day' },
   { date: 'April 13',  label: 'Proclamation of Winners' },
 ];
@@ -31,6 +30,7 @@ const collegesData = [
   { name: 'Carl Patrick R. Rebago',      position: 'CBM Representative',   initials: 'CR', logo:'assets/person_icon.svg' },
   { name: 'Zyann Maxinne S. Matin-ao',   position: 'CON Representative',   initials: 'ZM' , logo:'assets/person_icon.svg'},
   { name: 'Gil James Amante',            position: 'USSCO Representative', initials: 'GA', logo:'assets/person_icon.svg' },
+  { name: 'Alyssa Sayon',            position: 'ARSO Representative', initials: 'AS', logo:'assets/person_icon.svg' },
 ];
 
 const committeeData = {
