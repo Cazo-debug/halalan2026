@@ -337,6 +337,144 @@ a    { color: inherit; text-decoration: none; }
   line-height: 1.7;
 }
 
+/* ── Filing Steps Accordion ── */
+.filing-steps {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex; flex-direction: column; gap: 10px;
+  text-align: left;
+}
+
+.fstep-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: background 0.22s var(--ease), border-color 0.22s;
+}
+.fstep-card:has(.fstep-trigger[aria-expanded="true"]) {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(229,198,81,0.40);
+}
+
+/* Trigger row — always visible */
+.fstep-trigger {
+  width: 100%;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+  padding: 18px 20px;
+  background: none; border: none; cursor: pointer;
+  color: var(--white);
+  text-align: left;
+}
+.fstep-trigger:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: -3px;
+  border-radius: var(--radius);
+}
+
+.fstep-left {
+  display: flex; align-items: center; gap: 14px;
+  min-width: 0;
+}
+
+.fstep-num {
+  font-family: var(--ff-display);
+  font-size: 2rem; line-height: 1;
+  color: var(--yellow);
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+  width: 40px;
+}
+
+.fstep-meta {
+  display: flex; flex-direction: column; gap: 2px;
+  min-width: 0;
+}
+.fstep-label {
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(229,198,81,0.80);
+}
+.fstep-title {
+  font-size: clamp(0.88rem, 2.5vw, 1rem);
+  font-weight: 700; line-height: 1.3;
+  color: var(--white);
+}
+
+/* Chevron rotates when open */
+.fstep-chevron {
+  font-size: 1.4rem;
+  color: rgba(255,255,255,0.50);
+  flex-shrink: 0;
+  transition: transform 0.28s var(--ease), color 0.22s;
+  display: block;
+  line-height: 1;
+}
+.fstep-trigger[aria-expanded="true"] .fstep-chevron {
+  transform: rotate(180deg);
+  color: var(--yellow);
+}
+
+/* Body — hidden by default, animated open */
+.fstep-body {
+  padding: 0 20px;
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.40s var(--ease), padding 0.28s var(--ease);
+}
+.fstep-body:not([hidden]) {
+  max-height: 600px;
+  padding: 4px 20px 20px;
+}
+/* Override browser's hidden attribute for animation */
+.fstep-body[hidden] { display: block !important; }
+
+.fstep-body p {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.fstep-body p:last-child { margin-bottom: 0; }
+
+.fstep-body ul {
+  margin: 8px 0 14px 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.fstep-body ul li {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.70);
+  line-height: 1.55;
+  padding-left: 18px;
+  position: relative;
+}
+.fstep-body ul li::before {
+  content: '›';
+  position: absolute; left: 0;
+  color: var(--yellow);
+  font-weight: 700; font-size: 1rem;
+  line-height: 1.4;
+}
+.fstep-body ul li strong { color: var(--white); font-weight: 700; }
+.fstep-body p strong     { color: var(--white); font-weight: 700; }
+
+.fstep-note {
+  margin-top: 12px !important;
+  font-style: italic;
+  color: rgba(255,255,255,0.50) !important;
+  font-size: 0.80rem !important;
+  border-top: 1px solid rgba(255,255,255,0.10);
+  padding-top: 10px;
+}
+
+/* Separator between trigger and open body */
+.fstep-trigger[aria-expanded="true"] {
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
 
 /* ══════════════════════════════════════════════════════
    TIMELINE  —  blue section

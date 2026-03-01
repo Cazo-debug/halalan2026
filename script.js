@@ -248,6 +248,47 @@ const requirementsData = [
 
 
 /* ══════════════════════════════════════════════════
+   FILING STEPS — accordion toggle
+══════════════════════════════════════════════════ */
+(function initFilingSteps() {
+  const triggers = document.querySelectorAll('.fstep-trigger');
+  if (!triggers.length) return;
+
+  triggers.forEach(btn => {
+    const bodyId = btn.getAttribute('aria-controls');
+    const body   = document.getElementById(bodyId);
+    if (!body) return;
+
+    // Start collapsed but remove [hidden] so CSS transition works
+    body.removeAttribute('hidden');
+    body.style.maxHeight = '0';
+    body.style.padding   = '0 20px';
+
+    btn.addEventListener('click', () => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+      // Close all first (one-open-at-a-time)
+      triggers.forEach(other => {
+        const otherId = other.getAttribute('aria-controls');
+        const otherBody = document.getElementById(otherId);
+        if (!otherBody) return;
+        other.setAttribute('aria-expanded', 'false');
+        otherBody.style.maxHeight = '0';
+        otherBody.style.padding   = '0 20px';
+      });
+
+      // Open clicked one if it was closed
+      if (!isOpen) {
+        btn.setAttribute('aria-expanded', 'true');
+        body.style.maxHeight = body.scrollHeight + 40 + 'px';
+        body.style.padding   = '4px 20px 20px';
+      }
+    });
+  });
+})();
+
+
+/* ══════════════════════════════════════════════════
    TICKER — clone for seamless loop
 ══════════════════════════════════════════════════ */
 (function initTicker() {
