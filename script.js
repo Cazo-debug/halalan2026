@@ -1,22 +1,20 @@
 /* ═══════════════════════════════════════════════════
    HALALAN 2026 — script.js
-   All data preserved · Duplicate initNavbar removed
 ═══════════════════════════════════════════════════ */
 'use strict';
 
 /* ══════════════════════════════════════════════════
-   DATA — edit these to update the site content
+   DATA
 ══════════════════════════════════════════════════ */
-
 const timelineData = [
-  { date: 'Mar 1',   label: 'Filing of Candidacy Opens' },
-  { date: 'Mar 11',  label: 'Filing of Candidacy Closes' },
-  { date: 'Mar 15',  label: 'Posting of Official Candidates' },
-  { date: 'Mar 16',  label: 'Campaign Period Begins' },
-  { date: 'April 8', label: 'Meeting de Avance and End of Campaign Period' },
-  { date: 'April 9', label: 'Special Online Election for OJT Students' },
-  { date: 'April 10',label: 'Election Day' },
-  { date: 'April 13',label: 'Proclamation of Winners' },
+  { date: 'Mar 1',    label: 'Filing of Candidacy Opens' },
+  { date: 'Mar 11',   label: 'Filing of Candidacy Closes' },
+  { date: 'Mar 15',   label: 'Posting of Official Candidates' },
+  { date: 'Mar 16',   label: 'Campaign Period Begins' },
+  { date: 'April 8',  label: 'Meeting de Avance and End of Campaign Period' },
+  { date: 'April 9',  label: 'Special Online Election for OJT Students' },
+  { date: 'April 10', label: 'Election Day' },
+  { date: 'April 13', label: 'Proclamation of Winners' },
 ];
 
 const collegesData = [
@@ -63,6 +61,56 @@ const requirementsData = [
 
 
 /* ══════════════════════════════════════════════════
+   HERO VIDEO — load fade + audio toggle
+══════════════════════════════════════════════════ */
+(function initHeroVideo() {
+  const video   = document.getElementById('heroVideo');
+  const audioBtn= document.getElementById('heroAudioBtn');
+  if (!video || !audioBtn) return;
+
+  /* ── Fade in once the video has data to play ── */
+  const revealVideo = () => video.classList.add('loaded');
+  video.addEventListener('canplay', revealVideo, { once: true });
+  // If already ready (cached), fire immediately
+  if (video.readyState >= 3) revealVideo();
+
+  /* ── Pause video when tab is hidden (battery / bandwidth saving) ── */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { video.pause(); }
+    else { video.play().catch(() => {}); }
+  });
+
+  /* ── Audio toggle ── */
+  // Browser requires muted to autoplay; we start muted and let user unmute
+  video.muted = true;
+  let isMuted = true;
+
+  audioBtn.addEventListener('click', () => {
+    isMuted = !isMuted;
+    video.muted = isMuted;
+
+    if (!isMuted) {
+      // Some browsers need explicit volume set after unmute
+      video.volume = 0.85;
+      audioBtn.classList.add('unmuted');
+      audioBtn.setAttribute('aria-label', 'Mute video');
+    } else {
+      audioBtn.classList.remove('unmuted');
+      audioBtn.setAttribute('aria-label', 'Unmute video');
+    }
+  });
+
+  /* ── Reduced-motion: pause video if user prefers it ── */
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (prefersReducedMotion.matches) {
+    video.pause();
+    video.style.display = 'none'; // show poster frame instead
+    revealVideo();
+  }
+})();
+
+
+/* ══════════════════════════════════════════════════
    NAVBAR — hamburger toggle
 ══════════════════════════════════════════════════ */
 (function initNavbar() {
@@ -74,14 +122,12 @@ const requirementsData = [
     const open = menu.classList.toggle('open');
     btn.setAttribute('aria-expanded', String(open));
   });
-
   menu.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
       menu.classList.remove('open');
       btn.setAttribute('aria-expanded', 'false');
     });
   });
-
   document.addEventListener('click', e => {
     if (!menu.contains(e.target) && !btn.contains(e.target)) {
       menu.classList.remove('open');
@@ -92,7 +138,40 @@ const requirementsData = [
 
 
 /* ══════════════════════════════════════════════════
-   TIMELINE — render + arrow scroll
+   FILING STEPS — accordion
+══════════════════════════════════════════════════ */
+(function initFilingSteps() {
+  const triggers = document.querySelectorAll('.fstep-trigger');
+  if (!triggers.length) return;
+
+  triggers.forEach(btn => {
+    const body = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!body) return;
+    body.removeAttribute('hidden');
+    body.style.maxHeight = '0';
+    body.style.padding   = '0 20px';
+
+    btn.addEventListener('click', () => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      // Close all
+      triggers.forEach(other => {
+        const ob = document.getElementById(other.getAttribute('aria-controls'));
+        if (ob) { ob.style.maxHeight = '0'; ob.style.padding = '0 20px'; }
+        other.setAttribute('aria-expanded', 'false');
+      });
+      // Open clicked if was closed
+      if (!isOpen) {
+        btn.setAttribute('aria-expanded', 'true');
+        body.style.maxHeight = (body.scrollHeight + 40) + 'px';
+        body.style.padding   = '4px 20px 20px';
+      }
+    });
+  });
+})();
+
+
+/* ══════════════════════════════════════════════════
+   TIMELINE — render + scroll
 ══════════════════════════════════════════════════ */
 (function initTimeline() {
   const container = document.querySelector('.timeline-scroll');
@@ -106,28 +185,19 @@ const requirementsData = [
     el.className = 'tl-item fade-in';
     el.setAttribute('role', 'listitem');
     el.style.transitionDelay = `${i * 0.06}s`;
-    el.innerHTML = `
-      <div class="tl-item-date">${item.date}</div>
-      <div class="tl-item-label">${item.label}</div>
-    `;
+    el.innerHTML = `<div class="tl-item-date">${item.date}</div><div class="tl-item-label">${item.label}</div>`;
     container.appendChild(el);
   });
 
   const SCROLL_AMT = 214;
   prevBtn?.addEventListener('click', () => container.scrollBy({ left: -SCROLL_AMT, behavior: 'smooth' }));
   nextBtn?.addEventListener('click', () => container.scrollBy({ left:  SCROLL_AMT, behavior: 'smooth' }));
-
-  [prevBtn, nextBtn].forEach(btn => {
-    btn?.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
-    });
-  });
+  [prevBtn, nextBtn].forEach(b => b?.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); b.click(); } }));
 
   container.addEventListener('scroll', () => {
     const max = container.scrollWidth - container.clientWidth;
     if (max <= 0) return;
-    const pct = container.scrollLeft / max;
-    const idx = Math.round(pct * (dots.length - 1));
+    const idx = Math.round((container.scrollLeft / max) * (dots.length - 1));
     dots.forEach((d, i) => d.classList.toggle('active', i === idx));
   });
 })();
@@ -139,7 +209,6 @@ const requirementsData = [
 (function initColleges() {
   const list = document.getElementById('colleges-list');
   if (!list) return;
-
   collegesData.forEach((c, i) => {
     const el = document.createElement('div');
     el.className = 'college-entry fade-in';
@@ -147,14 +216,12 @@ const requirementsData = [
     el.style.transitionDelay = `${i * 0.06}s`;
     el.innerHTML = `
       <div class="college-avatar" aria-hidden="true">
-        <img src="${c.logo}" alt="${c.position} icon"
-             onerror="this.remove(); this.parentElement.textContent='${c.initials}'">
+        <img src="${c.logo}" alt="" onerror="this.remove();this.parentElement.textContent='${c.initials}'">
       </div>
       <div class="college-info">
         <div class="college-name">${c.name}</div>
         <div class="college-position">${c.position}</div>
-      </div>
-    `;
+      </div>`;
     list.appendChild(el);
   });
 })();
@@ -166,26 +233,21 @@ const requirementsData = [
 (function initCommittee() {
   const wrap = document.getElementById('committee-grid');
   if (!wrap) return;
-
   Object.values(committeeData).forEach(row => {
     const rowEl = document.createElement('div');
     rowEl.className = 'comm-row';
-
     row.forEach(member => {
       const card = document.createElement('div');
       card.className = 'comm-card fade-in';
       card.setAttribute('tabindex', '0');
       card.innerHTML = `
         <div class="comm-avatar" aria-hidden="true">
-          <img src="${member.logo}" alt="${member.role} icon"
-               onerror="this.remove(); this.parentElement.textContent='${member.initials}'">
+          <img src="${member.logo}" alt="" onerror="this.remove();this.parentElement.textContent='${member.initials}'">
         </div>
         <div class="comm-name">${member.name}</div>
-        <div class="comm-role">${member.role}</div>
-      `;
+        <div class="comm-role">${member.role}</div>`;
       rowEl.appendChild(card);
     });
-
     wrap.appendChild(rowEl);
   });
 })();
@@ -197,7 +259,6 @@ const requirementsData = [
 (function initRequirements() {
   const grid = document.getElementById('req-grid');
   if (!grid) return;
-
   requirementsData.forEach((r, i) => {
     const card = document.createElement('div');
     card.className = 'req-card fade-in';
@@ -207,93 +268,38 @@ const requirementsData = [
     card.innerHTML = `
       <div class="req-icon" aria-hidden="true">${r.icon}</div>
       <div class="req-body">
-        <div class="req-title">
-          <span class="req-letter" aria-hidden="true">${r.letter}</span>
-          ${r.title}
-        </div>
+        <div class="req-title"><span class="req-letter" aria-hidden="true">${r.letter}</span>${r.title}</div>
         <div class="req-desc">${r.desc}</div>
-      </div>
-    `;
+      </div>`;
     grid.appendChild(card);
   });
 })();
 
 
 /* ══════════════════════════════════════════════════
-   INTERSECTION OBSERVER — fade-in on scroll
+   FADE-IN OBSERVER
 ══════════════════════════════════════════════════ */
 (function initFadeIn() {
   const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        io.unobserve(e.target);
-      }
-    });
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
   }, { threshold: 0.10 });
 
-  // Observe static cards immediately + dynamic ones after a tick
   const observe = () => {
-    document.querySelectorAll(
-      '.step-card, .dl-card, .college-entry, .comm-card, .tl-item, .req-card, .filing-content'
-    ).forEach(el => {
+    document.querySelectorAll('.step-card, .dl-card, .college-entry, .comm-card, .tl-item, .req-card').forEach(el => {
       el.classList.add('fade-in');
       io.observe(el);
     });
   };
-
   observe();
-  setTimeout(observe, 200); // catch JS-injected nodes
+  setTimeout(observe, 200);
 })();
 
 
 /* ══════════════════════════════════════════════════
-   FILING STEPS — accordion toggle
-══════════════════════════════════════════════════ */
-(function initFilingSteps() {
-  const triggers = document.querySelectorAll('.fstep-trigger');
-  if (!triggers.length) return;
-
-  triggers.forEach(btn => {
-    const bodyId = btn.getAttribute('aria-controls');
-    const body   = document.getElementById(bodyId);
-    if (!body) return;
-
-    // Start collapsed but remove [hidden] so CSS transition works
-    body.removeAttribute('hidden');
-    body.style.maxHeight = '0';
-    body.style.padding   = '0 20px';
-
-    btn.addEventListener('click', () => {
-      const isOpen = btn.getAttribute('aria-expanded') === 'true';
-
-      // Close all first (one-open-at-a-time)
-      triggers.forEach(other => {
-        const otherId = other.getAttribute('aria-controls');
-        const otherBody = document.getElementById(otherId);
-        if (!otherBody) return;
-        other.setAttribute('aria-expanded', 'false');
-        otherBody.style.maxHeight = '0';
-        otherBody.style.padding   = '0 20px';
-      });
-
-      // Open clicked one if it was closed
-      if (!isOpen) {
-        btn.setAttribute('aria-expanded', 'true');
-        body.style.maxHeight = body.scrollHeight + 40 + 'px';
-        body.style.padding   = '4px 20px 20px';
-      }
-    });
-  });
-})();
-
-
-/* ══════════════════════════════════════════════════
-   TICKER — clone for seamless loop
+   TICKER
 ══════════════════════════════════════════════════ */
 (function initTicker() {
   const span = document.querySelector('.hero-ticker span');
   if (!span) return;
-  const text = span.textContent;
-  span.innerHTML = text.repeat(4);
+  span.innerHTML = span.textContent.repeat(4);
 })();

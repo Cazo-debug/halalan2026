@@ -43,12 +43,72 @@
 
   <main>
 
-    <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+    <!-- ═══════════════════════════ HERO — VIDEO ═══════════════════════════
+         📁 assets/hero.mp4   (H.264, 1080p, 4–6 Mbps)
+         📁 assets/hero.webm  (VP9 fallback)
+         📁 assets/hero-poster.jpg  (first frame still, shown before video loads)
+    ════════════════════════════════════════════════════════════════ -->
     <section id="home" class="hero" aria-label="Hero section">
-      <div class="section-bg" aria-hidden="true" style="background-image:url('assets/backlground.svg')">
-        <div class="section-bg-overlay" style="background:linear-gradient(160deg,rgba(28,28,28,0.20) 0%,rgba(0,0,0,0.2) 100%)"></div>
+
+      <!-- VIDEO BACKGROUND -->
+      <div class="hero-video-wrap" aria-hidden="true">
+        <video
+          class="hero-video"
+          id="heroVideo"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="assets/hero-poster.jpg"
+        >
+          <!-- WebM first — smaller, better quality in Chrome/Firefox -->
+          <source src="assets/hero.webm" type="video/webm" />
+          <!-- MP4 fallback — Safari, older browsers -->
+          <source src="assets/hero.mp4"  type="video/mp4"  />
+        </video>
+        <!-- Gradient overlay on top of video -->
+        <div class="hero-video-overlay"></div>
       </div>
-      <div class="hero-content"></div>
+
+      <!-- OVERLAY CONTENT -->
+      <div class="hero-content">
+        <p class="hero-eyebrow" aria-hidden="true">HALALAN 2026</p>
+        <blockquote class="hero-quote">
+          <p>"If you want to<br/>change the system,<br/><em>be in the system."</em></p>
+        </blockquote>
+        <a href="#filing" class="btn btn-hero">File Now →</a>
+      </div>
+
+      <!-- AUDIO TOGGLE BUTTON -->
+      <button
+        class="hero-audio-btn"
+        id="heroAudioBtn"
+        aria-label="Unmute video"
+        title="Toggle audio"
+      >
+        <!-- Muted icon (default state) -->
+        <svg class="audio-icon icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <line x1="23" y1="9" x2="17" y2="15"/>
+          <line x1="17" y1="9" x2="23" y2="15"/>
+        </svg>
+        <!-- Unmuted icon (shown when audio is on) -->
+        <svg class="audio-icon icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+        <span class="audio-label">Sound</span>
+      </button>
+
+      <!-- SCROLL CUE -->
+      <div class="hero-scroll-cue" aria-hidden="true">
+        <span class="scroll-line"></span>
+        <span class="scroll-text">Scroll</span>
+      </div>
+
+      <!-- TICKER -->
       <div class="hero-ticker" aria-hidden="true">
         <span>HALALAN 2026 &nbsp;·&nbsp; CMU STUDENT COUNCIL ELECTIONS &nbsp;·&nbsp; YOUR VOTE COUNTS &nbsp;·&nbsp; HALALAN 2026 &nbsp;·&nbsp; STUDENT COUNCIL ELECTIONS &nbsp;·&nbsp; YOUR VOTE COUNTS &nbsp;·&nbsp;</span>
       </div>
@@ -60,17 +120,13 @@
            style="background:#c01000 url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E&quot;) repeat;">
         <div class="section-bg-overlay" style="background:linear-gradient(135deg,rgba(230,77,63,0.0) 0%,rgba(0,0,0,0.45) 100%)"></div>
       </div>
-
       <div class="filing-content">
-        <!-- Header -->
         <span class="filing-sub">Filing of Candidacy</span>
         <h2 id="filing-title" class="filing-date">March 1–11</h2>
         <p class="filing-note">Submit your COC at the OSA during office hours. Late submissions will not be accepted.</p>
         <a href="#downloads" class="btn btn-accent" style="margin-bottom:48px">Download the Form →</a>
 
-        <!-- 3-step accordion cards -->
         <div class="filing-steps" role="list">
-
           <!-- Step 1 -->
           <div class="fstep-card" role="listitem">
             <button class="fstep-trigger" aria-expanded="false" aria-controls="fstep-body-1">
@@ -83,20 +139,20 @@
               </div>
               <span class="fstep-chevron" aria-hidden="true">&#8964;</span>
             </button>
-            <div class="fstep-body" id="fstep-body-1" role="region" aria-labelledby="fstep-trigger-1" hidden>
+            <div class="fstep-body" id="fstep-body-1" role="region" hidden>
               <p>All aspiring candidates must prepare and submit the following documentary requirements:</p>
               <ul>
                 <li>Duly accomplished <strong>Certificate of Candidacy (COC)</strong> with a 2×2 ID photo</li>
                 <li><strong>Certificate of Good Moral Character</strong></li>
                 <li><strong>Grade Slip</strong> from the previous semester</li>
                 <li><strong>Certificate of Registration (COR)</strong> for the current semester</li>
-                <li><strong>Endorsement Letters</strong> from the Dean and Department Head. In cases where the College has no Department Head, the endorsement shall bear the signature of the respective Dean</li>
+                <li><strong>Endorsement Letters</strong> from the Dean and Department Head. If no Department Head, the Dean's signature suffices</li>
                 <li>Updated <strong>Curriculum Vitae</strong></li>
-                <li>A comprehensive <strong>General Plan of Action</strong>, whether running independently or under a political party</li>
-                <li>Political parties must submit requirements as a group. Failure to include members shall automatically classify the candidate/s as independent</li>
-                <li>All documents must be compiled in a <strong>clear plastic envelope</strong>. For party submissions, documents must be properly arranged according to position</li>
+                <li>A comprehensive <strong>General Plan of Action</strong>, whether independent or under a political party</li>
+                <li>Political parties must submit as a group — incomplete party = automatically independent</li>
+                <li>All documents in a <strong>clear plastic envelope</strong>, arranged by position for parties</li>
               </ul>
-              <p class="fstep-note">Applicants are advised to refer to the SSC Constitution and By-Laws (CBL) for further information regarding candidate qualifications.</p>
+              <p class="fstep-note">Refer to the SSC Constitution and By-Laws (CBL) for candidate qualifications.</p>
             </div>
           </div>
 
@@ -107,18 +163,16 @@
                 <span class="fstep-num">02</span>
                 <div class="fstep-meta">
                   <span class="fstep-label">Step 2</span>
-                  <span class="fstep-title">Coordination with the Political Electoral Committee</span>
+                  <span class="fstep-title">Coordinate with the Electoral Committee</span>
                 </div>
               </div>
               <span class="fstep-chevron" aria-hidden="true">&#8964;</span>
             </button>
             <div class="fstep-body" id="fstep-body-2" role="region" hidden>
-              <p>Candidates must <strong>send an email</strong> to the Political Electoral Committee indicating the date and time they intend to submit their requirements — for documentation purposes and to formally signify their intention to file for candidacy.</p>
-              <p>All candidates are required to wear <strong>white attire</strong> as a symbol of transparency, neutrality, and commitment to a fair electoral process.</p>
-              <p>All candidates must be present during submission. Candidates belonging to the same political party must <strong>appear together</strong> when submitting their documents.</p>
-              <p class="fstep-note">Contact Email: <a href="mailto:ssc.elecom2026@gmail.com"><strong>ssc.elecom2026@gmail.com</strong></a></p>
+              <p>Send an email to the Political Electoral Committee with your intended <strong>submission date and time</strong> — for documentation and to formally signal your intention to file.</p>
+              <p>All candidates must wear <strong>white attire</strong> as a symbol of transparency and neutrality. Same-party candidates must <strong>appear together</strong> when submitting.</p>
+              <p class="fstep-note">Contact: <a href="mailto:ssc.elecom2026@gmail.com"><strong>ssc.elecom2026@gmail.com</strong></a></p>
             </div>
-            
           </div>
 
           <!-- Step 3 -->
@@ -134,15 +188,14 @@
               <span class="fstep-chevron" aria-hidden="true">&#8964;</span>
             </button>
             <div class="fstep-body" id="fstep-body-3" role="region" hidden>
-              <p>Candidates shall proceed to the <strong>Office of Student Affairs (OSA) Hall</strong> and formally submit their Certificates of Candidacy and complete requirements to the:</p>
+              <p>Proceed to the <strong>Office of Student Affairs (OSA) Hall</strong> and formally submit your COC and complete requirements to the:</p>
               <ul>
                 <li>Head of Transparency and Accountability</li>
                 <li>Chief Commissioner</li>
               </ul>
             </div>
           </div>
-
-        </div><!-- /filing-steps -->
+        </div>
       </div>
     </section>
 
@@ -158,14 +211,10 @@
       </div>
       <div class="timeline-diagram" aria-hidden="true">
         <div class="tl-track">
-          <div class="tl-dot active"></div>
-          <div class="tl-line"></div>
-          <div class="tl-dot"></div>
-          <div class="tl-line"></div>
-          <div class="tl-dot"></div>
-          <div class="tl-line"></div>
-          <div class="tl-dot"></div>
-          <div class="tl-line"></div>
+          <div class="tl-dot active"></div><div class="tl-line"></div>
+          <div class="tl-dot"></div><div class="tl-line"></div>
+          <div class="tl-dot"></div><div class="tl-line"></div>
+          <div class="tl-dot"></div><div class="tl-line"></div>
           <div class="tl-dot"></div>
         </div>
       </div>
@@ -222,15 +271,13 @@
           <div class="dl-icon" aria-hidden="true">📘</div>
           <h3>Constitution &amp; By-Laws</h3>
           <p>Requirements and Eligibility of Candidates.</p>
-          <a href="assets/HALALAN2026_CBL.pdf" download class="btn btn-blue"
-             aria-label="Download Constitution and By-Laws PDF">Download PDF</a>
+          <a href="assets/HALALAN2026_CBL.pdf" download class="btn btn-blue">Download PDF</a>
         </article>
         <article class="dl-card dl-red" tabindex="0">
           <div class="dl-icon" aria-hidden="true">📄</div>
           <h3>Filing of Candidacy Form</h3>
           <p>Required form for all candidates running in HALALAN 2026.</p>
-          <a href="assets/[HALALAN 2026]COC.pdf" download class="btn btn-red"
-             aria-label="Download Filing of Candidacy Form PDF">Download Form</a>
+          <a href="assets/[HALALAN 2026]COC.pdf" download class="btn btn-red">Download Form</a>
         </article>
       </div>
     </section>
